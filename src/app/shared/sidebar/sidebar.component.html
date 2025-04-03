@@ -1,0 +1,43 @@
+<div class="sidebar bg-dark text-white p-3 vh-100 position-fixed d-flex flex-column" 
+     [ngClass]="{ 'collapsed': isSidebarClosed, 'sidebar-expanded': !isSidebarClosed }">
+  
+  <!-- Profil en haut -->
+  <div class="profile d-flex align-items-center mb-3">
+    <img src="assets/images/profile.jpg" alt="User" class="profile-img" 
+         style="width: 40px; height: 40px; border-radius: 50%;">
+    <span *ngIf="!isSidebarClosed" class="username">Nom d'utilisateur</span>
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="search-container mb-3">
+    <input type="text" class="form-control search-input" placeholder="Rechercher..." 
+           (input)="search($event)">
+  </div>
+
+  <!-- Menu Principal -->
+  <ul class="nav flex-column">
+    <li *ngFor="let item of filteredMenuItems" class="nav-item">
+      <a [routerLink]="item.path" routerLinkActive="active" class="nav-link text-white" 
+         (click)="item.name === 'Messages' ? toggleMessages() : null">
+        <i [class]="item.icon"></i>
+        <span *ngIf="!isSidebarClosed">{{ item.name }}</span>
+      </a>
+      <!-- Sous-menu Messages -->
+      <ul *ngIf="item.path.includes('messages') && isMessagesOpen && !isSidebarClosed" class="nav flex-column sub-menu">
+        <li *ngFor="let subItem of item.subMenu" class="nav-item">
+          <a [routerLink]="subItem.path" routerLinkActive="active" class="nav-link text-white">{{ subItem.name }}</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <!-- Toggler Button (Mobile view) -->
+  <button class="btn btn-light d-lg-none mt-auto" (click)="toggleSidebar()">
+    <i class="bi" [ngClass]="{ 'bi-chevron-left': !isSidebarClosed, 'bi-chevron-right': isSidebarClosed }"></i>
+  </button>
+</div>
+
+<!-- Contenu principal qui réagit au statut de la sidebar -->
+<div class="main-content" [ngClass]="{ 'sidebar-collapsed': isSidebarClosed }">
+  <!-- Contenu ici -->
+</div>
